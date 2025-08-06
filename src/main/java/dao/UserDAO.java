@@ -39,7 +39,7 @@ public class UserDAO {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
-				String sql = "SELECT COUNT(*) FROM user WHERE name = ?";
+				String sql = "SELECT COUNT(*) FROM users WHERE name = ?";
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
 					ps.setString(1, name);
@@ -64,7 +64,7 @@ public class UserDAO {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
-				String sql = "INSERT INTO user(NAME,PASS) VALUES ( ? , ?)";
+				String sql = "INSERT INTO users(NAME,PASS) VALUES ( ? , ?)";
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
 					ps.setString(1, user.getName());
@@ -86,7 +86,7 @@ public class UserDAO {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
-				String sql = "SELECT * FROM user WHERE name = ? AND pass = ?";
+				String sql = "SELECT * FROM users WHERE name = ? AND pass = ?";
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
 					ps.setString(1, user.getName());

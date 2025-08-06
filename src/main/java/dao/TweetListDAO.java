@@ -41,7 +41,7 @@ public class TweetListDAO {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
-                String sql = "INSERT INTO tweet (NAME, TEXT) VALUES (?, ?)";
+                String sql = "INSERT INTO tweets (NAME, TEXT) VALUES (?, ?)";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
                     ps.setString(1, tweet.getUserName());
                     ps.setString(2, tweet.getText());
@@ -61,7 +61,7 @@ public class TweetListDAO {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
-                String sql = "SELECT ID, NAME, TEXT, POST_TIME FROM tweet ORDER BY id DESC";
+                String sql = "SELECT ID, NAME, TEXT, POST_TIME FROM tweets ORDER BY id DESC";
                 try (PreparedStatement ps = conn.prepareStatement(sql);
                      ResultSet rs = ps.executeQuery()) {
 
