@@ -86,15 +86,17 @@ public class UserDAO {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
-				String sql = "SELECT * FROM users WHERE name = ? AND pass = ?";
+				String sql = "SELECT pass FROM users WHERE name = ?";
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
 					ps.setString(1, user.getName());
-					ps.setString(2, user.getPass());
 
 					try (ResultSet rs = ps.executeQuery()) {
 						if (rs.next()) {
-							result = true;
+							String hashedPass = rs.getString("pass");
+
+	                        // パスワード照合（平文 vs ハッシュ）
+	                        result = util.PasswordUtil.checkPassword(user.getPass(), hashedPass);
 						}
 					}
 				}

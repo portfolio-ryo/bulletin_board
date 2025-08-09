@@ -23,6 +23,7 @@ public class Login extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		String name = request.getParameter("name");
 		String pass = request.getParameter("pass");
+		
 
 		if (name == null || name.isEmpty() || pass == null || pass.isEmpty()) {
 			request.setAttribute("error", "名前とパスワードは必須です。");

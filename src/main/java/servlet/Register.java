@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import dao.UserDAO;
 import model.User;
+import util.PasswordUtil;
 
 
 @WebServlet("/Register")
@@ -22,16 +23,17 @@ public class Register extends HttpServlet {
 		//リクエストパラメータの取得
 		request.setCharacterEncoding("UTF-8");
 		String name = request.getParameter("name");
-		String pass = request.getParameter("pass");
+		String plainPass = request.getParameter("pass");
+		String hashedPass = PasswordUtil.hashPassword(plainPass);
 				
-		if (name == null || name.isEmpty() || pass == null || pass.isEmpty()) {
+		if (name == null || name.isEmpty() || hashedPass == null || hashedPass.isEmpty()) {
             request.setAttribute("error", "ユーザー名とパスワードは必須です。");
             RequestDispatcher dispatcher = request.getRequestDispatcher("/register.jsp");
             dispatcher.forward(request, response);
             return;
 		}
 		
-		if (pass.length() < 4) {
+		if (hashedPass.length() < 4) {
 	        request.setAttribute("error", "パスワードは4文字以上で入力してください。");
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("/register.jsp");
 	        dispatcher.forward(request, response);
@@ -46,7 +48,7 @@ public class Register extends HttpServlet {
             return;
         }
 		
-		User user = new User(name, pass);
+		User user = new User(name, hashedPass);
         boolean success = dao.insert(user);
         
         if (success) {
