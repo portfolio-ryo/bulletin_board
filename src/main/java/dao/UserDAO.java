@@ -9,6 +9,10 @@ import java.sql.SQLException;
 import io.github.cdimascio.dotenv.Dotenv;
 import model.User;
 
+/**
+ * ユーザー情報のデータベースアクセスを担当するクラス。
+ * ユーザーの登録、重複チェック、ログイン認証処理を行う。
+ */
 public class UserDAO {
 	private String jdbcUrl;
 	private String dbUser;
@@ -34,6 +38,9 @@ public class UserDAO {
         this.dbPass = dbPass;
     }
 
+	/**
+     * 指定されたユーザー名がすでに登録されているかを確認する。
+     */
 	public boolean duplication(String name) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -59,6 +66,9 @@ public class UserDAO {
 		return false;
 	}
 
+	/**
+     * ユーザー情報をデータベースに登録する。
+     */
 	public boolean insert(User user) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -68,7 +78,7 @@ public class UserDAO {
 
 				try (PreparedStatement ps = conn.prepareStatement(sql)) {
 					ps.setString(1, user.getName());
-					ps.setString(2, user.getPass());
+					ps.setString(2, user.getHashedPass());
 					int result = ps.executeUpdate();
 					return result > 0;
 				}
@@ -79,6 +89,9 @@ public class UserDAO {
 		return false;
 	}
 
+	/**
+     * ユーザー名とパスワードを照合し、ログイン認証を行う。
+     */
 	public boolean login(User user) {
 		boolean result = false;
 
@@ -96,7 +109,7 @@ public class UserDAO {
 							String hashedPass = rs.getString("pass");
 
 	                        // パスワード照合（平文 vs ハッシュ）
-	                        result = util.PasswordUtil.checkPassword(user.getPass(), hashedPass);
+	                        result = util.PasswordUtil.checkPassword(user.getPlainPass(), hashedPass);
 						}
 					}
 				}

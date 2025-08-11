@@ -62,7 +62,7 @@
 	%>
 	<form action="Login" method="post">
 	ユーザー名:<input type="text" name="name"><br> 
-	パスワード:<input type="password" name="pass"><br> 
+	パスワード:<input type="password" name="plainPass"><br> 
 	<input type="submit"value="ログイン">
 	<a href="register.jsp" style="display:block; margin-top:10px; text-align:center;">新規登録</a>
 	</form>

@@ -10,13 +10,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-
+/**
+ * ログアウト処理を行うサーブレット。
+ * セッションを無効化し、トップページにリダイレクトする。
+ */
 @WebServlet("/Logout")
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * GETリクエストを処理し、セッションを破棄してトップページへ遷移する。
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//セッションスコープを破棄
+		
 		HttpSession session=request.getSession();
 		session.invalidate();
 		

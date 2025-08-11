@@ -55,7 +55,7 @@ String error = (String) request.getAttribute("error");
 <%}%>
 <form id="registerForm" action="Register" method="post">
     ユーザー名: <input type="text" id="username" name="name" placeholder="1～20文字で作成"><br>
-    パスワード: <input type="password" id="password" name="pass" placeholder="4～20文字で作成"><br>
+    パスワード: <input type="password" id="password" name="plainPass" placeholder="4～20文字で作成"><br>
     <input type="submit" value="登録" id="submitBtn">
 </form>
 </div>

@@ -3,6 +3,9 @@ package model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 投稿情報を表すクラス。
+ */
 public class Tweet implements Serializable{
 	private int id;
 	private String userName;

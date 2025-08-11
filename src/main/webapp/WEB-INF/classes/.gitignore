@@ -1,4 +1,5 @@
-/util/
-/servlet/
-/model/
 /dao/
+/logic/
+/model/
+/servlet/
+/util/

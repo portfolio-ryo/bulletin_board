@@ -10,32 +10,39 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import dao.UserDAO;
+import logic.LoginLogic;
 import model.User;
 
+/**
+ * ログイン処理を担当するサーブレット。
+ * 入力チェックと認証を行い、成功時はメインページへ遷移する。
+ */
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * ログインフォームのPOSTリクエストを処理する。
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//リクエストパラメータの取得
+		
 		request.setCharacterEncoding("UTF-8");
 		String name = request.getParameter("name");
-		String pass = request.getParameter("pass");
+		String plainPass = request.getParameter("plainPass");
 		
+		LoginLogic loginService = new LoginLogic();
 
-		if (name == null || name.isEmpty() || pass == null || pass.isEmpty()) {
+		if (loginService.isInvalidInput(name, plainPass)) {
 			request.setAttribute("error", "名前とパスワードは必須です。");
 			RequestDispatcher rd = request.getRequestDispatcher("top.jsp");
 			rd.forward(request, response);
 			return;
 		}
 
-		User user = new User(name, pass);
-		UserDAO dao = new UserDAO();
+		User user = new User(name, plainPass);
 
-		if (dao.login(user)) {
+		if (loginService.authenticate(user)) {
 			HttpSession session = request.getSession();
 			session.setAttribute("userName", name);
 			response.sendRedirect("Main");

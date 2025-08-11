@@ -12,6 +12,10 @@ import java.util.List;
 import io.github.cdimascio.dotenv.Dotenv;
 import model.Tweet;
 
+/**
+ * 投稿情報をデータベースから操作するDAOクラス。
+ * 投稿の登録および全件取得の処理を担当する。
+ */
 public class TweetListDAO {
 	private String jdbcUrl;
     private String dbUser;
@@ -37,6 +41,9 @@ public class TweetListDAO {
         this.dbPass = dbPass;
     }
     
+    /**
+     * 投稿情報をデータベースに挿入する。
+     */
 	public void insert(Tweet tweet) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -53,7 +60,9 @@ public class TweetListDAO {
         }
     }
 
-	
+	/**
+     * 投稿を全件取得し、投稿日時の降順で返す。
+     */
 	public List<Tweet> findAll() {
         List<Tweet> tweetList = new ArrayList<>();
 
