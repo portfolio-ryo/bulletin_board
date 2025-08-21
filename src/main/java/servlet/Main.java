@@ -11,12 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import logic.TweetList;
 import logic.TweetLogic;
 import model.Tweet;
 
 /**
  * メインページの表示と投稿を処理するサーブレット。
+ * 
+ * <p>GETリクエストでは投稿一覧を表示し、POSTリクエストでは新規投稿を受け付ける。</p>
  */
 @WebServlet("/Main")
 public class Main extends HttpServlet {
@@ -24,10 +25,15 @@ public class Main extends HttpServlet {
     
 	/**
 	 * 投稿一覧を取得して表示する。
+	 * 
+	 * @param request クライアントからのリクエスト
+	 * @param response サーバーからのレスポンス
+	 * @throws ServletException サーブレットエラーが発生した場合
+	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		TweetList tweets = new TweetList();
+		TweetLogic tweets = new TweetLogic();
 		List<Tweet>tweetList=tweets.getAllTweets();
 		
 		request.setAttribute("tweetList", tweetList);
@@ -38,6 +44,11 @@ public class Main extends HttpServlet {
 
 	/**
 	 * 投稿し、一覧を再表示する。
+	 * 
+	 * @param request  クライアントからのリクエスト
+	 * @param response サーバーからのレスポンス
+	 * @throws ServletException サーブレットエラーが発生した場合
+	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		

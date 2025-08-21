@@ -8,6 +8,8 @@ import java.sql.SQLException;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import model.User;
+import util.DBUtil;
+
 
 /**
  * ユーザー情報のデータベースアクセスを担当するクラス。
@@ -18,7 +20,15 @@ public class UserDAO {
 	private String dbUser;
 	private String dbPass;
 	
+	/**
+     * 環境変数(.env)からDB接続情報を読み込み、
+     * JDBCドライバの初期化を行うデフォルトコンストラクタ。
+     * 
+     * @throws IllegalStateException DB_USERまたはDB_PASSが.envに設定されていない場合にスローされる
+     */
 	public UserDAO() {
+		DBUtil.init();
+		
 		Dotenv dotenv = Dotenv.configure()
                 .directory("") 
                 .load();
@@ -40,10 +50,12 @@ public class UserDAO {
 
 	/**
      * 指定されたユーザー名がすでに登録されているかを確認する。
+     * 
+     * @param name 確認したいユーザー名
+     * @return 登録済みであればtrue、未登録ならfalse
      */
 	public boolean duplication(String name) {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
 				String sql = "SELECT COUNT(*) FROM users WHERE name = ?";
@@ -68,10 +80,12 @@ public class UserDAO {
 
 	/**
      * ユーザー情報をデータベースに登録する。
+     * 
+     * @param user 登録するユーザー情報（ユーザー名、ハッシュ化済みパスワードを含む）
+     * @return 登録成功ならtrue、失敗した場合はfalse
      */
 	public boolean insert(User user) {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
 				String sql = "INSERT INTO users(NAME,PASS) VALUES ( ? , ?)";
@@ -91,12 +105,14 @@ public class UserDAO {
 
 	/**
      * ユーザー名とパスワードを照合し、ログイン認証を行う。
+     * 
+     * @param user ログイン認証対象のユーザー情報（ユーザー名と平文パスワード）
+     * @return 認証成功でtrue、失敗でfalse
      */
 	public boolean login(User user) {
 		boolean result = false;
 
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
 				String sql = "SELECT pass FROM users WHERE name = ?";

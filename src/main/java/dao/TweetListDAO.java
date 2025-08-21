@@ -11,6 +11,7 @@ import java.util.List;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import model.Tweet;
+import util.DBUtil;
 
 /**
  * 投稿情報をデータベースから操作するDAOクラス。
@@ -21,7 +22,15 @@ public class TweetListDAO {
     private String dbUser;
     private String dbPass;
     
+    /**
+     * 環境変数(.env)からDB接続情報を読み込み、
+     * JDBCドライバの初期化を行うデフォルトコンストラクタ。
+     * 
+     * @throws IllegalStateException DB_USERまたはDB_PASSが.envに設定されていない場合にスローされる
+     */
     public TweetListDAO() {
+    	
+    	DBUtil.init();
     	Dotenv dotenv = Dotenv.configure()
                 .directory("") 
                 .load();
@@ -43,10 +52,12 @@ public class TweetListDAO {
     
     /**
      * 投稿情報をデータベースに挿入する。
+     * 
+     * @param tweet 登録する投稿情報（ユーザー名、投稿テキストを含む）
      */
 	public void insert(Tweet tweet) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            
             try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
                 String sql = "INSERT INTO tweets (NAME, TEXT) VALUES (?, ?)";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -62,12 +73,13 @@ public class TweetListDAO {
 
 	/**
      * 投稿を全件取得し、投稿日時の降順で返す。
+     * 
+     * @return 投稿情報のリスト（投稿日時の降順）
      */
 	public List<Tweet> findAll() {
         List<Tweet> tweetList = new ArrayList<>();
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
 
             try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {
                 String sql = "SELECT ID, NAME, TEXT, POST_TIME FROM tweets ORDER BY id DESC";

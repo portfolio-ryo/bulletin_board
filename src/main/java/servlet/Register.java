@@ -14,13 +14,23 @@ import logic.RegisterLogic;
 
 /**
  * 新規ユーザー登録を処理するサーブレット。
+ * <p>登録フォームから送信された情報を受け取り、
+ * バリデーション、重複チェック、登録処理を行う。</p>
  */
 @WebServlet("/Register")
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * ユーザー登録フォームのPOSTリクエストを処理する。
+	 * ユーザー登録フォームからのPOSTリクエストを処理する。
+	 * 
+	 * <p>入力内容を検証し、問題がなければユーザーを登録する。
+	 * 登録後はメイン画面にリダイレクトする。</p>
+	 *
+	 * @param request  クライアントからのリクエスト
+	 * @param response サーバーからのレスポンス
+	 * @throws ServletException サーブレットエラーが発生した場合
+	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
